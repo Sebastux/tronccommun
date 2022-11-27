@@ -1,0 +1,33 @@
+---
+# Variables internes
+version_role: "3.1.0"
+
+# Listes des packages à installer / desinstaller
+installe_tronc: [ 'vim-filesystem', 'vim-minimal', 'vim-common', 'vim-X11', 'vim-commentary', 'vim-enhanced',
+                  'vim-syntastic-sh', 'vim-syntastic-xml', 'vim-syntastic-spec', 'vim-syntastic-xslt',
+                  'vim-syntastic-yaml', 'vim-syntastic-python', 'vim-syntastic-ansible', 'lshw', 'git-all',
+                  'smartmontools', 'python3-dnf-plugin-system-upgrade', 'python3-libselinux', 'htop',
+                  'chrony', 'python3-pip', 'p7zip', 'p7zip-doc', 'p7zip-plugins', 'python3-devel' ]
+
+installe_pc: [ 'okular', 'okular-libs', 'parted', 'gparted', 'lshw-gui', 'gsmartcontrol',
+               'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules', 'aria2',
+               'filezilla', 'libfilezilla', 'unetbootin', 'mediawriter', 'parted', 'gparted',
+               'numlockx', 'p7zip-gui', 'smartmontools' ]
+
+installe_rpi: [ 'python3-dnf', 'python3-virtualenv', 'fail2ban-all',
+                'langpacks-fr', 'lm_sensors', 'lm_sensors-libs', 'cronie',
+                'cronie-anacron' ]
+
+desinstalle_rpi: [ 'cockpit-ws', 'cockpit-bridge', 'cockpit-storaged', 'cockpit-system', 'cockpit-networkmanager' ]
+
+desinstalle_pc: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'claws-mail', 'pidgin', 'transmission',
+                  'xfce4-screensaver', 'xscreensaver-base' ]
+
+# packages_pip: [ 'pip', 'setuptools', 'wheel' ]
+packages_pip: [ 'pip', 'wheel', 'six' ]
+
+install_depots: [ "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
+                  "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm" ]
+
+# Détection de matériel
+architecture_processeur: "{{ ansible_architecture }}"

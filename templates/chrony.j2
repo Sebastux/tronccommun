@@ -1,0 +1,64 @@
+{{ ansible_managed | comment }}
+
+# Liste des serveurs de temps
+{% if type_machine == "fixe" %}
+    server mafreebox.freebox.fr prefer
+    server 0.fr.pool.ntp.org iburst
+    server 1.fr.pool.ntp.org iburst
+    server 2.fr.pool.ntp.org iburst
+    server 3.fr.pool.ntp.org iburst
+{% else %}
+    server 0.fr.pool.ntp.org iburst
+    server 1.fr.pool.ntp.org iburst
+    server 2.fr.pool.ntp.org iburst
+    server 3.fr.pool.ntp.org iburst
+    server 0.europe.pool.ntp.org iburst
+    server 1.europe.pool.ntp.org iburst
+    server 2.europe.pool.ntp.org iburst
+    server 3.europe.pool.ntp.org iburst
+{% endif %}
+
+# Port d’écoute
+port 123
+
+# Adresse de broadcast et adresse et adresse d'écoute pour les clients
+broadcast 60 {{ ansible_default_ipv4.address }} 123
+bindcmdaddress {{ ansible_default_ipv4.address }}
+
+
+# Record the rate at which the system clock gains/losses time.
+driftfile /var/lib/chrony/drift
+
+# Gestion des fichiers log
+logdir /var/log/chrony
+
+# Gestion du fichier pid
+pidfile /var/run/chrony/chronyd.pid
+
+# Allow the system clock to be stepped in the first three updates
+# if its offset is larger than 1 second.
+makestep 10 3
+
+# Enable kernel synchronization of the real-time clock (RTC).
+rtcsync
+
+# Enable hardware timestamping on all interfaces that support it.
+#hwtimestamp *
+
+# Increase the minimum number of selectable sources required to adjust
+# the system clock.
+#minsources 2
+{% if ansible_architecture == "aarch64" %}
+# Allow NTP client access from local network.
+allow {{ ansible_default_ipv4.network }}/24
+{% endif %}
+# Serve time even if not synchronized to a time source.
+#local stratum 10
+
+
+# Get TAI-UTC offset and leap seconds from the system tz database.
+leapsecmode slew
+maxslewrate 1000
+smoothtime 400 0.001 leaponly
+
+stratumweight 0

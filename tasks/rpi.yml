@@ -1,0 +1,82 @@
+---
+- name: RPI - Suppression de l'utilisateur local cockpit.
+  user:
+    name: cockpit-ws
+    state: absent
+    remove: yes
+  ignore_errors: yes
+
+- name: RPI - Suppression du groupe local cockpit.
+  group:
+    name: cockpit-ws
+    state: absent
+  ignore_errors: yes
+
+- name: RPI - Copie du script de configuration de langue.
+  template:
+    src: templates/configlang.j2
+    dest: /root/travail/configlang.sh
+    owner: root
+    group: root
+    mode: 0700
+    backup: no
+
+- name: RPI - Exécution du script de configuration langue.
+  shell: ./configlang.sh
+  args:
+    chdir: "/root/travail/"
+  register: retour
+  changed_when: retour.rc == 0
+  failed_when: retour.rc == 0
+
+- name: RPI -Désactivation du dépot h264 et modular.
+  ini_file:
+    path: "/etc/yum.repos.d/{{ item.path }}"
+    section: "{{ item.section }}"
+    option: "enabled"
+    value: "0"
+    mode: 0600
+    backup: no
+  with_items:
+    - {path: 'fedora-cisco-openh264.repo', section: 'fedora-cisco-openh264' }
+    - {path: 'fedora-modular.repo', section: 'fedora-modular' }
+
+- name: RPI - Installation des packages pour le raspberry.
+  dnf:
+    name: "{{ installe_rpi }}"
+    state: latest
+    update_cache: yes
+
+- name: RPI - Copie du fichier de config de fail2ban.
+  shell: cp -pf /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+  args:
+    executable: /bin/bash
+  register: retour
+  changed_when: retour.rc == 0
+  failed_when: retour.rc == 0
+
+- name: RPI - Copie de templates pour fail2ban.
+  template:
+    src: "templates/{{ item.source }}"
+    dest: "/etc/fail2ban/{{ item.destination }}"
+    backup: no
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - {source: 'sshd_f2b.j2', destination: 'jail.d/sshd.local' }
+    - {source: 'jail.j2', destination: 'jail.local' }
+
+- name: RPI - Activation du service fail2ban
+  systemd:
+    name: fail2ban
+    state: stopped
+    enabled: yes
+
+- name: RPI - Création du répertoire pour les facts ansible.
+  file:
+    path: /etc/ansible/facts.d
+    owner: root
+    group: root
+    mode: 0644
+    state: directory
