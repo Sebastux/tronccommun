@@ -1,7 +1,8 @@
 ---
 # Variables internes
-version_role: "3.1.0"
+version_role: "4.0.0"
 
+# ***************************************** Variables FEDORA ***********************************************************
 # Listes des packages à installer / desinstaller
 installe_tronc: [ 'vim-filesystem', 'vim-minimal', 'vim-common', 'vim-X11', 'vim-commentary', 'vim-enhanced',
                   'vim-syntastic-sh', 'vim-syntastic-xml', 'vim-syntastic-spec', 'vim-syntastic-xslt',
@@ -24,10 +25,26 @@ desinstalle_pc: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'cla
                   'xfce4-screensaver', 'xscreensaver-base' ]
 
 # packages_pip: [ 'pip', 'setuptools', 'wheel' ]
-packages_pip: [ 'pip', 'wheel', 'six' ]
+packages_pip: [ 'pip', 'setuptools', 'wheel', 'six' ]
 
 install_depots: [ "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
                   "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm" ]
 
 # Détection de matériel
 architecture_processeur: "{{ ansible_architecture }}"
+
+# ***************************************** Variables debian ***********************************************************
+liste_install: [ 'aptitude', 'chrony', 'python3-all', 'p7zip-full' , 'sudo',
+                 'mlocate', 'apt-file', 'net-tools', 'tree', 'wget','curl',
+                 'vim', 'vim-addon-manager', 'vim-doc', 'vim-pathogen',
+                 'vim-scripts', 'vim-solarized', 'vim-syntastic',  'dirmngr',
+                 'vim-youcompleteme', 'git-all', 'python3-all', 'python3-pip' ]
+
+cockpit_list: [ 'cockpit', 'cockpit-doc', 'cockpit-networkmanager',
+                'cockpit-packagekit', 'cockpit-pcp', 'cockpit-shell',
+                'cockpit-ssh', 'cockpit-storaged', 'cockpit-system',
+                'cockpit-systemd', 'cockpit-users', 'cockpit-ws' ]
+
+cockpit_install: false
+
+liste_pip: [ 'pip', 'setuptools', 'wheel', 'six' ]

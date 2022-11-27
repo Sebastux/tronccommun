@@ -1,0 +1,118 @@
+---
+- name: Installation des dépôts debian 11
+  template:
+    src: templates/sourcelist.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Mise à jour de la VM.
+  apt:
+    name: "*"
+    state: latest
+
+- name: Gestion d'erreur lors de l'installation des packages du role.
+  block:
+    - name: Installation des packages du rôle.
+      apt:
+        name: "{{ liste_install }}"
+        state: latest
+        update_cache: yes
+        dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
+  rescue:
+    - name: Installation des packages du rôle.
+      apt:
+        name: "{{ liste_install }}"
+        state: latest
+        update_cache: yes
+        dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
+
+- name: Gestion d'erreur lors de l'installation des packages cockpit.
+  block:
+    - name: Installation de cockpit.
+      apt:
+        name: "{{ cockpit_list }}"
+        state: latest
+        update_cache: no
+        dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
+      when: cockpit_install | bool
+  rescue:
+    - name: Installation de cockpit.
+      apt:
+        name: "{{ cockpit_list }}"
+        state: latest
+        update_cache: no
+        dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
+      when: cockpit_install | bool
+
+- name: Mise à jour des packages de bases python.
+  pip:
+    name: "{{ liste_pip }}"
+    executable: pip3
+    state: latest
+
+- name: Arret de chrony.
+  systemd:
+    name: chrony
+    state: stopped
+    enabled: yes
+
+- name: Configuration de chrony.
+  template:
+    src: templates/chrony_debian.j2
+    dest: /etc/chrony.conf
+    backup: no
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Redémarrage de chrony.
+  systemd:
+    name: chrony
+    state: started
+    enabled: yes
+
+- name: Ouverture d'un port pour le service chrony.
+  firewalld:
+    service: ntp
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Suppression du motd cockpit.
+  file:
+    path: /etc/motd.d/cockpit
+    state: absent
+
+- name: Vérification du démarrage de cockpit.
+  systemd:
+    name: cockpit
+    state: started
+    enabled: yes
+
+- name: Ouverture d'un port pour le service cockpit.
+  firewalld:
+    service: cockpit
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Ouverture d'un port pour les services web.
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+    - http
+    - https
+
+- name: Redémarrage du serveur.
+  reboot:
+    msg: "Redémarrage automatique du serveur par ansible."
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
