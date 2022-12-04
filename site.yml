@@ -1,0 +1,5 @@
+---
+- name: Installation et configuration de la machine.
+  hosts: serveur
+  gather_facts: yes
+  roles:

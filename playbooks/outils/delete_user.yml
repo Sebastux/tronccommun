@@ -1,0 +1,25 @@
+---
+- name: Suppression de compte.
+  hosts: serveur
+  gather_facts: yes
+  vars_prompt:
+
+    - name: login
+      prompt: "Veuillez entrer l'identifiant du compte "
+      private: no
+
+  tasks:
+    - name: "Suppression du compte : {{ login }}"
+      user:
+        name: "{{ login }}"
+        state: absent
+        remove: yes
+
+    - name: Suppression de l'ancienne clé SSH.
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "../../cles_ssh/{{ login }}"
+        - "../../cles_ssh/{{ login }}.pub"
+      delegate_to: localhost

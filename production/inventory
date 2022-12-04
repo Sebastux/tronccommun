@@ -1,0 +1,20 @@
+[serveur]
+"serveur" ansible_host=1.2.3.4
+
+[serveur:vars]
+ansible_port=22
+ansible_ssh_user="Compte de connexion"
+ansible_ssh_pass="Mot de passe du compte de connexion"
+ansible_become=no
+ansible_become_method=sudo
+# Le compte de connexion doit posséder les droits sudo. Dans ce cas mettre
+# le mot de passe de ce compte. Dans le cas contraire remplacer sudo par su
+# et mettre le mot de passe root.
+ansible_become_password="Mot de passe du compte de connexion."
+
+# Ne pas modifier
+ansible_ssh_private_key_file=../cles_ssh/root
+ansible_python_interpreter=/usr/bin/python3
+ansible_become_user=root
+activate_ssl=false
+ansible_remote_user=root
