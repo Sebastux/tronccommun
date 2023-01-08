@@ -1,5 +1,6 @@
 ---
-- name: Installation et configuration de la machine.
-  hosts: serveur
+- name: Installation du tronc commun.
+  hosts: "{{ cible }}"
   gather_facts: yes
   roles:
+    - tronccommun
