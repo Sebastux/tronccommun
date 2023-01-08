@@ -1,4 +1,7 @@
 ---
+- name: Import des variables de lb distribution.
+  include_vars: defaults/fedora.yml
+
 - name: Désactivation de selinux.
   selinux:
     state: disabled
@@ -78,7 +81,7 @@
     state: enabled
     immediate: yes
 
-- name: Création des répertoires pour les alias, du répertoire d'ansible.
+- name: Création des répertoires pour les alias.
   file:
     path: "{{ item.chemin }}"
     owner: root
@@ -128,50 +131,10 @@
   import_tasks: pc.yml
   when: architecture_processeur == 'x86_64'
 
-- name: Installation pour un Raspberri Pi.
-  import_tasks: rpi.yml
-  when: architecture_processeur == 'aarch64'
-
 - name: Suppression du répertoire de travail.
   file:
     path: /root/travail
     state: absent
-
-- name: Gestion d'erreur de copie de template.
-  block:
-    - name: Création du fichier facts (playbook).
-      template:
-        src: ../ficscommun/templates/fact.j2
-        dest: /etc/ansible/facts.d/tronccomunfedora.fact
-        owner: root
-        group: root
-        backup: no
-        mode: 0644
-  rescue:
-    - name: Création du fichier facts (site).
-      template:
-        src: ficscommun/templates/fact.j2
-        dest: /etc/ansible/facts.d/tronccomunfedora.fact
-        owner: root
-        group: root
-        backup: no
-        mode: 0644
-
-- name: Création du fichiers de fact.
-  ini_file:
-    path: /etc/ansible/facts.d/tronccomunfedora.fact
-    section: installation
-    option: "{{ item.option }}"
-    value: "{{ item.valeur }}"
-    mode: '0600'
-    backup: no
-  with_items:
-    - {option: 'playbook_version', valeur: "{{ version_playbook }}" }
-    - {option: 'role_version', valeur: "{{ version_role }}" }
-    - {option: 'type_machine', valeur: "{{ architecture_processeur }}" }
-    - {option: 'jour_installation', valeur: "{{ ansible_date_time.weekday }}" }
-    - {option: 'date_installation', valeur: "{{ ansible_date_time.day }}/{{ ansible_date_time.month }}/{{ ansible_date_time.year }}" }
-    - {option: 'heure_installation', valeur: "{{ ansible_date_time.time }}" }
 
 - name: Ajout d'une référence dans le fichier bashrc root.
   lineinfile:

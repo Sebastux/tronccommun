@@ -10,22 +10,13 @@ installe_tronc: [ 'vim-filesystem', 'vim-minimal', 'vim-common', 'vim-X11', 'vim
                   'plymouth-plugin-script', 'plymouth-plugin-space-flares', 'plymouth-plugin-two-step',
                   'plymouth-scripts', 'plymouth-system-theme', 'plymouth-theme-breeze', 'plymouth-theme-charge',
                   'plymouth-theme-fade-in', 'plymouth-theme-script', 'plymouth-theme-solar', 'plymouth-theme-spinfinity',
-                  'plymouth-theme-spinner' ]
-
-installe_server: [ 'parted', 'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules', 'aria2',
-                   'numlockx' ]
+                  'plymouth-theme-spinner', 'parted', 'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules' ]
 
 installe_gui: [ 'okular', 'okular-libs', 'gparted', 'lshw-gui', 'gsmartcontrol',
                 'filezilla', 'libfilezilla', 'unetbootin', 'mediawriter', 'p7zip-gui',
-                'smartmontools', 'sssd-client' ]
+                'smartmontools', 'sssd-client', 'numlockx', 'aria2', 'bpytop', 'btop' ]
 
-installe_rpi: [ 'python3-dnf', 'python3-virtualenv', 'fail2ban-all',
-                'langpacks-fr', 'lm_sensors', 'lm_sensors-libs', 'cronie',
-                'cronie-anacron' ]
-
-desinstalle_rpi: [ 'cockpit-ws', 'cockpit-bridge', 'cockpit-storaged', 'cockpit-system', 'cockpit-networkmanager' ]
-
-desinstalle_pc: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'claws-mail', 'pidgin', 'transmission',
+desinstalle_gui: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'claws-mail', 'pidgin', 'transmission',
                   'xfce4-screensaver', 'xscreensaver-base' ]
 
 # packages_pip: [ 'pip', 'setuptools', 'wheel' ]
@@ -33,6 +24,3 @@ packages_pip: [ 'pip', 'wheel', 'six' ]
 
 install_depots: [ "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
                   "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm" ]
-
-# Détection de matériel
-architecture_processeur: "{{ ansible_architecture }}"

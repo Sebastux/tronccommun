@@ -4,16 +4,9 @@
 unalias ll 2>/dev/null
 alias ll='ls -lh --color=auto'
 
-{% if architecture_processeur == 'aarch64'  %}
-# Alias pour les mises à jour
-alias maj='dnf clean all; dnf update *dnf* --enablerepo=updates-testing -y; dnf -y update'
-alias beta='dnf update --enablerepo=updates-testing'
-
-{% else %}
 # Alias pour les mises à jour
 alias maj='dnf clean all; dnf update *dnf* rpmfusion* -y --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing; dnf -y update'
 alias beta='dnf update --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing'
-{% endif %}
 
 # Ajout du timestamp dans history
 HISTTIMEFORMAT="%d/%m/%y %T "
