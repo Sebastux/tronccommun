@@ -2,21 +2,20 @@
 - name: Import des variables de lb distribution.
   include_vars: defaults/fedora.yml
 
-- name: Désactivation de selinux.
-  selinux:
-    state: disabled
+- name: Test de la présence de service XFCE.
+  stat:
+    path: /usr/lib/systemd/system/lightdm.service
+  register: xfce_svce
 
 - name: Désinstallation de packages inutiles sur PC.
   dnf:
-    name: "{{ desinstalle_pc }}"
+    name: "{{ desinstalle_gui }}"
     state: absent
-  when: architecture_processeur == 'x86_64'
+  when: xfce_svce.stat.exist is true | bool
 
-- name: Désinstallation de packages inutiles sur raspberry Pi.
-  dnf:
-    name: "{{ desinstalle_rpi }}"
-    state: absent
-  when: architecture_processeur == 'aarch64'
+- name: Désactivation de selinux.
+  selinux:
+    state: disabled
 
 - name: Création du repertoire de travail.
   file:
@@ -91,7 +90,6 @@
   with_items:
     - {chemin: '/root/.alias', mode: '0644' }
     - {chemin: '/etc/skel/.alias', mode: '0755' }
-    - {chemin: '/etc/ansible/facts.d', mode: '0644' }
 
 - name: Copie des divers templates.
   template:
@@ -129,7 +127,7 @@
 
 - name: Installation pour un PC.
   import_tasks: pc.yml
-  when: architecture_processeur == 'x86_64'
+  when: xfce_svce.stat.exist is true | bool
 
 - name: Suppression du répertoire de travail.
   file:

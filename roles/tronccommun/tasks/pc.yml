@@ -24,7 +24,7 @@
 
 - name: PC - Ajout de packages pour PC.
   dnf:
-    name: "{{ installe_pc }}"
+    name: "{{ installe_gui }}"
     state: latest
     update_cache: yes
 
