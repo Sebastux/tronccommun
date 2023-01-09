@@ -20,7 +20,7 @@ desinstalle_gui: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'cl
                   'xfce4-screensaver', 'xscreensaver-base' ]
 
 # packages_pip: [ 'pip', 'setuptools', 'wheel' ]
-packages_pip: [ 'pip', 'wheel', 'six' ]
+packages_pip: [ 'pip', 'wheel', 'setuptools', 'six' ]
 
 install_depots: [ "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
                   "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm" ]
