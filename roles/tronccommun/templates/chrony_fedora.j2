@@ -1,22 +1,14 @@
 {{ ansible_managed | comment }}
 
-# Liste des serveurs de temps
-{% if type_machine == "fixe" %}
-    server mafreebox.freebox.fr prefer
-    server 0.fr.pool.ntp.org iburst
-    server 1.fr.pool.ntp.org iburst
-    server 2.fr.pool.ntp.org iburst
-    server 3.fr.pool.ntp.org iburst
-{% else %}
-    server 0.fr.pool.ntp.org iburst
-    server 1.fr.pool.ntp.org iburst
-    server 2.fr.pool.ntp.org iburst
-    server 3.fr.pool.ntp.org iburst
-    server 0.europe.pool.ntp.org iburst
-    server 1.europe.pool.ntp.org iburst
-    server 2.europe.pool.ntp.org iburst
-    server 3.europe.pool.ntp.org iburst
-{% endif %}
+server 0.fr.pool.ntp.org iburst
+server 1.fr.pool.ntp.org iburst
+server 2.fr.pool.ntp.org iburst
+server 3.fr.pool.ntp.org iburst
+server 0.europe.pool.ntp.org iburst
+server 1.europe.pool.ntp.org iburst
+server 2.europe.pool.ntp.org iburst
+server 3.europe.pool.ntp.org iburst
+
 
 # Port d’écoute
 port 123
@@ -48,10 +40,7 @@ rtcsync
 # Increase the minimum number of selectable sources required to adjust
 # the system clock.
 #minsources 2
-{% if ansible_architecture == "aarch64" %}
-# Allow NTP client access from local network.
-allow {{ ansible_default_ipv4.network }}/24
-{% endif %}
+
 # Serve time even if not synchronized to a time source.
 #local stratum 10
 
