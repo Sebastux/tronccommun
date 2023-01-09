@@ -1,23 +1,23 @@
 ---
-- name: Import des variables de lb distribution.
+- name: FEDORA - Import des variables de la distribution.
   include_vars: defaults/fedora.yml
 
-- name: Test de la présence de service XFCE.
+- name: FEDORA - Test de la présence de service XFCE.
   stat:
     path: /usr/lib/systemd/system/lightdm.service
   register: xfce_svce
 
-- name: Désinstallation de packages inutiles sur PC.
+- name: FEDORA - Désinstallation de packages inutiles sur PC.
   dnf:
     name: "{{ desinstalle_gui }}"
     state: absent
   when: xfce_svce.stat.exist is true | bool
 
-- name: Désactivation de selinux.
+- name: FEDORA - Désactivation de selinux.
   selinux:
     state: disabled
 
-- name: Création du repertoire de travail.
+- name: FEDORA - Création du repertoire de travail.
   file:
     path: /root/travail
     owner: root
@@ -25,13 +25,13 @@
     mode: 0700
     state: directory
 
-- name: Installation des dépots RPM fusion.
+- name: FEDORA - Installation des dépots RPM fusion.
   dnf:
     name: "{{ install_depots }}"
     state: present
     disable_gpg_check: yes
 
-- name: Ajout de paramètres au fichier de configuration de dnf.
+- name: FEDORA - Ajout de paramètres au fichier de configuration de dnf.
   ini_file:
     path: /etc/dnf/dnf.conf
     section: main
@@ -62,25 +62,25 @@
     - {option: 'color_update_remote', valeur: "bold,green" }
 
 #  "(architecture {{ architecture_processeur }})."
-- name: Mise à jour du système.
+- name: FEDORA - Mise à jour du système.
   dnf:
     name: "*"
     state: latest
     update_cache: yes
 
-- name: Installation du tronc commun.
+- name: FEDORA - Installation du tronc commun.
   dnf:
     name: "{{ installe_tronc }}"
     state: latest
 
-- name: Ajout d'une règle dans le pare-feu pour chrony.
+- name: FEDORA - Ajout d'une règle dans le pare-feu pour chrony.
   firewalld:
     port: 123/udp
     permanent: True
     state: enabled
     immediate: yes
 
-- name: Création des répertoires pour les alias.
+- name: FEDORA - Création des répertoires pour les alias.
   file:
     path: "{{ item.chemin }}"
     owner: root
@@ -91,7 +91,7 @@
     - {chemin: '/root/.alias', mode: '0644' }
     - {chemin: '/etc/skel/.alias', mode: '0755' }
 
-- name: Copie des divers templates.
+- name: FEDORA - Copie des divers templates.
   template:
     src: "templates/{{ item.fichier }}"
     dest: "{{ item.chemin }}"
@@ -100,15 +100,15 @@
     group: root
     mode: 0644
   with_items:
-    - { fichier: 'chrony.j2', chemin: '/etc/chrony.conf', sauve: 'yes' }
+    - { fichier: 'chrony_fedora.j2', chemin: '/etc/chrony.conf', sauve: 'yes' }
     - { fichier: 'alias_utilisateur.j2', chemin: '/etc/skel/.alias/alias.txt', sauve: 'no' }
     - { fichier: 'alias_root.j2', chemin: '/root/.alias/alias.txt', sauve: 'no' }
 
-- name: Configuration de la timezone.
+- name: FEDORA - Configuration de la timezone.
   timezone:
     name: Europe/Paris
 
-- name: Ajout d'une référence dans le fichier bashrc utilisateurs.
+- name: FEDORA - Ajout d'une référence dans le fichier bashrc utilisateurs.
   lineinfile:
     path: /etc/skel/.bashrc
     line: 'source ~/.alias/alias.txt'
@@ -119,22 +119,22 @@
     state: present
     backup: yes
 
-- name: Mise à jour des packages pip3.
+- name: FEDORA - Mise à jour des packages pip3.
   pip:
     executable: pip
     name: "{{ packages_pip }}"
     state: latest
 
-- name: Installation pour un PC.
+- name: FEDORA - Installation pour un PC.
   import_tasks: pc.yml
   when: xfce_svce.stat.exist is true | bool
 
-- name: Suppression du répertoire de travail.
+- name: FEDORA - Suppression du répertoire de travail.
   file:
     path: /root/travail
     state: absent
 
-- name: Ajout d'une référence dans le fichier bashrc root.
+- name: FEDORA - Ajout d'une référence dans le fichier bashrc root.
   lineinfile:
     path: /root/.bashrc
     line: 'source ~/.alias/alias.txt'
@@ -145,7 +145,7 @@
     state: present
     backup: yes
 
-- name: Redémarrage du serveur.
+- name: FEDORA - Redémarrage du serveur.
   reboot:
     msg: "Redémarrage automatique du serveur par ansible."
     connect_timeout: 5

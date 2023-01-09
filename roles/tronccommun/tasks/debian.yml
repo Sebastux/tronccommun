@@ -1,5 +1,8 @@
 ---
-- name: Installation des dépôts debian 11
+- name: DEBIAN - Import des variables de la distribution.
+  include_vars: defaults/debian.yml
+
+- name: DEBIAN - Installation des dépôts debian 11
   template:
     src: templates/sourcelist.j2
     dest: /etc/apt/sources.list
@@ -7,30 +10,30 @@
     group: root
     mode: 0644
 
-- name: Mise à jour de la VM.
+- name: DEBIAN - Mise à jour de la VM.
   apt:
     name: "*"
     state: latest
 
-- name: Gestion d'erreur lors de l'installation des packages du role.
+- name: DEBIAN - Gestion d'erreur lors de l'installation des packages du role.
   block:
-    - name: Installation des packages du rôle.
+    - name: DEBIAN - Installation des packages du rôle.
       apt:
         name: "{{ liste_install }}"
         state: latest
         update_cache: yes
         dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
   rescue:
-    - name: Installation des packages du rôle.
+    - name: DEBIAN - Installation des packages du rôle.
       apt:
         name: "{{ liste_install }}"
         state: latest
         update_cache: yes
         dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
 
-- name: Gestion d'erreur lors de l'installation des packages cockpit.
+- name: DEBIAN - Gestion d'erreur lors de l'installation des packages cockpit.
   block:
-    - name: Installation de cockpit.
+    - name: DEBIAN - Installation de cockpit.
       apt:
         name: "{{ cockpit_list }}"
         state: latest
@@ -38,7 +41,7 @@
         dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
       when: cockpit_install | bool
   rescue:
-    - name: Installation de cockpit.
+    - name: DEBIAN - Installation de cockpit.
       apt:
         name: "{{ cockpit_list }}"
         state: latest
@@ -46,19 +49,19 @@
         dpkg_options: Dpkg::Options::="--force-overwrite" --fix-broken install
       when: cockpit_install | bool
 
-- name: Mise à jour des packages de bases python.
+- name: DEBIAN - Mise à jour des packages de bases python.
   pip:
-    name: "{{ liste_pip }}"
+    name: "{{ packages_pip }}"
     executable: pip3
     state: latest
 
-- name: Arret de chrony.
+- name: DEBIAN - Arret de chrony.
   systemd:
     name: chrony
     state: stopped
     enabled: yes
 
-- name: Configuration de chrony.
+- name: DEBIAN - Configuration de chrony.
   template:
     src: templates/chrony_debian.j2
     dest: /etc/chrony.conf
@@ -67,38 +70,38 @@
     group: root
     mode: 0644
 
-- name: Redémarrage de chrony.
+- name: DEBIAN - Redémarrage de chrony.
   systemd:
     name: chrony
     state: started
     enabled: yes
 
-- name: Ouverture d'un port pour le service chrony.
+- name: DEBIAN - Ouverture d'un port pour le service chrony.
   firewalld:
     service: ntp
     permanent: yes
     state: enabled
     immediate: yes
 
-- name: Suppression du motd cockpit.
+- name: DEBIAN - Suppression du motd cockpit.
   file:
     path: /etc/motd.d/cockpit
     state: absent
 
-- name: Vérification du démarrage de cockpit.
+- name: DEBIAN - Vérification du démarrage de cockpit.
   systemd:
     name: cockpit
     state: started
     enabled: yes
 
-- name: Ouverture d'un port pour le service cockpit.
+- name: DEBIAN - Ouverture d'un port pour le service cockpit.
   firewalld:
     service: cockpit
     permanent: yes
     state: enabled
     immediate: yes
 
-- name: Ouverture d'un port pour les services web.
+- name: DEBIAN - Ouverture d'un port pour les services web.
   firewalld:
     service: "{{ item }}"
     permanent: yes
@@ -108,7 +111,7 @@
     - http
     - https
 
-- name: Redémarrage du serveur.
+- name: DEBIAN - Redémarrage du serveur.
   reboot:
     msg: "Redémarrage automatique du serveur par ansible."
     connect_timeout: 5
