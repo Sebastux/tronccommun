@@ -1,1 +1,3 @@
 ---
+- name: CENTOS - Import des variables de la distribution.
+  include_vars: defaults/centos.yml
