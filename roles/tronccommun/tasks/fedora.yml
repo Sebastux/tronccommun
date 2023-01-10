@@ -145,6 +145,9 @@
     state: present
     backup: yes
 
+- name: FEDORA - Activation du thème.
+  script: files/install_plymouth.sh
+
 - name: FEDORA - Redémarrage du serveur.
   reboot:
     msg: "Redémarrage automatique du serveur par ansible."
