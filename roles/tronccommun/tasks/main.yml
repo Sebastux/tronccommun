@@ -13,8 +13,3 @@
   import_tasks:
     file: rocky.yml
   when: ansible_distribution == "Rocky"
-
-- name: Installation d'une machine Debian.
-  import_tasks:
-    file: debian.yml
-  when: ansible_distribution == "Debian"
