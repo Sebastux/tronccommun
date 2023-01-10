@@ -1,5 +1,5 @@
 ---
-install_depots: [ 'epel-next-release', 'epel-release' ]
+install_depots: [ 'epel-release' ]
 
 installe_tronc: [ 'lshw', 'git-all', 'smartmontools', 'python3-libselinux', 'htop',
                   'chrony', 'python3-pip', 'p7zip', 'p7zip-doc', 'p7zip-plugins', 'python3-devel',
