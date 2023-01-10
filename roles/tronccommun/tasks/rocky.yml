@@ -1,3 +1,150 @@
 ---
 - name: ROCKY - Import des variables de la distribution.
-  include_vars: defaults/roccky.yml
+  include_vars: defaults/rocky.yml
+
+- name: ROCKY - Désactivation de selinux.
+  selinux:
+    state: disabled
+
+- name: ROCKY - Création du repertoire de travail.
+  file:
+    path: /root/travail
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+
+- name: ROCKY - Installation des dépots epel.
+  dnf:
+    name: "{{ install_depots }}"
+    state: present
+    disable_gpg_check: yes
+
+- name: ROCKY - Installation des dépots rpmfusion.
+  script: files/rpmfusion.sh
+
+- name: ROCKY - Ajout de paramètres au fichier de configuration de dnf.
+  ini_file:
+    path: /etc/dnf/dnf.conf
+    section: main
+    option: "{{ item.option }}"
+    value: "{{ item.valeur }}"
+    mode: 0644
+  with_items:
+    - {option: 'clean_requirements_on_remove', valeur: 'True' }
+    - {option: 'fastestmirror', valeur: 'True' }
+    - {option: 'max_parallel_downloads', valeur: '4' }
+    - {option: 'metadata_timer_sync', valeur: '0' }
+    - {option: 'log_compress', valeur: 'True' }
+    - {option: 'deltarpm', valeur: 'True' }
+    - {option: 'color', valeur: 'always' }
+    - {option: 'color_list_installed_older', valeur: 'yellow' }
+    - {option: 'color_list_installed_newer', valeur: "bold,yellow" }
+    - {option: 'color_list_installed_reinstall', valeur: "dim,cyan" }
+    - {option: 'color_list_installed_running_kernel', valeur: "bold,underline" }
+    - {option: 'color_list_installed_extra', valeur: "bold,red" }
+    - {option: 'color_list_available_upgrade', valeur: "bold,blue" }
+    - {option: 'color_list_available_downgrade', valeur: "dim,magenta" }
+    - {option: 'color_list_available_install', valeur: "bold,cyan" }
+    - {option: 'color_list_available_reinstall', valeur: "bold,underline,green" }
+    - {option: 'color_list_available_running_kernel', valeur: "bold,underline" }
+    - {option: 'color_search_match', valeur: "bold,magenta" }
+    - {option: 'color_update_installed', valeur: "bg:red" }
+    - {option: 'color_update_local', valeur: "dim,green" }
+    - {option: 'color_update_remote', valeur: "bold,green" }
+
+#  "(architecture {{ architecture_processeur }})."
+- name: ROCKY - Mise à jour du système.
+  dnf:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: ROCKY - Installation du tronc commun.
+  dnf:
+    name: "{{ installe_tronc }}"
+    state: latest
+
+- name: ROCKY - Ajout d'une règle dans le pare-feu pour chrony.
+  firewalld:
+    port: 123/udp
+    permanent: True
+    state: enabled
+    immediate: yes
+
+- name: ROCKY - Création des répertoires pour les alias.
+  file:
+    path: "{{ item.chemin }}"
+    owner: root
+    group: root
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items:
+    - {chemin: '/root/.alias', mode: '0644' }
+    - {chemin: '/etc/skel/.alias', mode: '0755' }
+
+- name: ROCKY - Copie des divers templates.
+  template:
+    src: "templates/{{ item.fichier }}"
+    dest: "{{ item.chemin }}"
+    backup: "{{ item.sauve }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { fichier: 'chrony_fedora.j2', chemin: '/etc/chrony.conf', sauve: 'yes' }
+    - { fichier: 'alias_utilisateur.j2', chemin: '/etc/skel/.alias/alias.txt', sauve: 'no' }
+    - { fichier: 'alias_root.j2', chemin: '/root/.alias/alias.txt', sauve: 'no' }
+
+- name: ROCKY - Configuration de la timezone.
+  timezone:
+    name: Europe/Paris
+
+- name: ROCKY - Ajout d'une référence dans le fichier bashrc utilisateurs.
+  lineinfile:
+    path: /etc/skel/.bashrc
+    line: 'source ~/.alias/alias.txt'
+    owner: root
+    group: root
+    mode: 0644
+    insertafter: EOF
+    state: present
+    backup: yes
+
+- name: ROCKY - Mise à jour des packages pip3.
+  pip:
+    executable: pip
+    name: "{{ packages_pip }}"
+    state: latest
+
+- name: ROCKY - Installation pour un PC.
+  import_tasks: pc.yml
+  when: xfce_svce.stat.exist is true | bool
+
+- name: ROCKY - Suppression du répertoire de travail.
+  file:
+    path: /root/travail
+    state: absent
+
+- name: ROCKY - Ajout d'une référence dans le fichier bashrc root.
+  lineinfile:
+    path: /root/.bashrc
+    line: 'source ~/.alias/alias.txt'
+    owner: root
+    group: root
+    mode: 0644
+    insertafter: EOF
+    state: present
+    backup: yes
+
+- name: ROCKY - Activation du thème.
+  script: files/install_plymouth.sh
+
+- name: ROCKY - Redémarrage du serveur.
+  reboot:
+    msg: "Redémarrage automatique du serveur par ansible."
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
