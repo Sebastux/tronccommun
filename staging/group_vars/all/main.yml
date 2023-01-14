@@ -1,6 +1,0 @@
----
-# Variabe interne
-version_playbook: "V 1.0 dev"
-
-# Environement de fonctionnement de la machine
-environnement_machine: staging

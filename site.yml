@@ -1,6 +1,0 @@
----
-- name: Installation du tronc commun.
-  hosts: "{{ cible }}"
-  gather_facts: yes
-  roles:
-    - tronccommun

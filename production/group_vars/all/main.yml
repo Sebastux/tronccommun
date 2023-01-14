@@ -1,6 +1,0 @@
----
-# Variabe interne
-version_playbook: "1.0.0"
-
-# Environement de fonctionnement de la machine
-environnement_machine: production

@@ -1,5 +1,0 @@
-ansible
-ansible-core
-jinja2
-cryptography
-jsonschema
