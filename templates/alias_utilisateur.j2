@@ -1,0 +1,21 @@
+{{ ansible_managed | comment }}
+
+# Alias divers
+unalias ll 2>/dev/null
+alias ll='ls -lh --color=auto'
+
+# Ajout de la date dans bash_history
+export HISTTIMEFORMAT="%d/%m/%Y %T "
+
+# Augmentation de la liste des commandes
+export HISTSIZE=2000
+
+# Modification du prompt
+export PS1="[\[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;10m\]\u\[$(tput sgr0)\]@\[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;14m\]\h\[$(tput sgr0)\]] \$? : \[$(tput sgr0)\]"
+
+# Utilisation de vim par defaut
+if $(which vim > /dev/null 2>&1)
+then
+        alias vi='vim'
+        export EDITOR=$(which vim)
+fi

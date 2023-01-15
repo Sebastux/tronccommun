@@ -1,0 +1,2 @@
+---
+packages_pip: [ 'pip', 'wheel', 'setuptools', 'six' ]
