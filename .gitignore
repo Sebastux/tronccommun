@@ -1,9 +1,3 @@
-# inventaire dev
-inventory
-
-#Fichiers intellil
+# Fichiers intellij
 .idea
 *.iml
-
-# python
-.venv
