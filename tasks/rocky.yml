@@ -21,7 +21,9 @@
     disable_gpg_check: yes
 
 - name: ROCKY - Installation des dépots rpmfusion.
-  script: files/rpmfusion.sh
+  dnf:
+    name: "{{ installe_tronc }}"
+    state: latest
 
 - name: ROCKY - Ajout de paramètres au fichier de configuration de dnf.
   ini_file:
@@ -116,10 +118,6 @@
     executable: pip
     name: "{{ packages_pip }}"
     state: latest
-
-- name: ROCKY - Installation pour un PC.
-  import_tasks: pc.yml
-  when: xfce_svce.stat.exist is true | bool
 
 - name: ROCKY - Suppression du répertoire de travail.
   file:

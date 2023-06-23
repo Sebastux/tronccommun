@@ -9,3 +9,6 @@ installe_tronc: [ 'lshw', 'git-all', 'smartmontools', 'python3-libselinux', 'hto
                   'plymouth-plugin-label', 'plymouth-plugin-script', 'plymouth-plugin-space-flares', 'plymouth-plugin-two-step',
                   'plymouth-scripts', 'plymouth-system-theme', 'plymouth-theme-charge', 'plymouth-theme-fade-in',
                   'plymouth-theme-script', 'plymouth-theme-solar', 'plymouth-theme-spinfinity', 'plymouth-theme-spinner' ]
+
+install_depots: [ "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_version | .replace(".", "-" ) }}.noarch.rpm",
+                  "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_version | .replace(".", "-" ) }}.noarch.rpm" ]
