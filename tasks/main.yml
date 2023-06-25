@@ -13,3 +13,8 @@
   import_tasks:
     file: rocky.yml
   when: ansible_distribution == "Rocky"
+
+- name: Installation d'une machine Alma Linux.
+  import_tasks:
+    file: rocky.yml
+  when: ansible_distribution == "AlmaLinux"
