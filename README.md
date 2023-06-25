@@ -14,7 +14,7 @@ Aucune
 
 ## **Système d'exploitation** :
 
-![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white) dans sa version 37
+![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white) dans sa version 38
 
 ![CentOS](https://img.shields.io/badge/cent%20os-002260?style=for-the-badge&logo=centos&logoColor=F0F0F0) dans sa version 9.x
 
@@ -33,13 +33,13 @@ Sebastux.
 
 ### **Versions** :
 
-![alt text](https://img.shields.io/badge/version-v1.0.0-brightgreen.svg "Logo Version") (25/06/2023) :
+![alt text](https://img.shields.io/badge/version-v1.1.0-brightgreen.svg "Logo Version") (25/06/2023) :
 
-- Ajout de la prise en charge d'Alma Linux.
+- Ajout de la prise en charge d'Alma Linux. Le rôle est commun pour Rocky et Alma.
 
 ![alt text](https://img.shields.io/badge/version-v1.0.0-brightgreen.svg "Logo Version") (15/01/2023) :
 
-  - Création du role.
+  - Création du rôle.
   - Installation de Fedora
   - Installation de CentOS 9
   - Installation de Rocky Linux 9
