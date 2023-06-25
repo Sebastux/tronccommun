@@ -1,12 +1,12 @@
 ---
-- name: ROCKY - Import des variables de la distribution.
+- name: "{{ ansible_distribution }} - Import des variables de la distribution."
   include_vars: defaults/rocky.yml
 
-- name: ROCKY - Désactivation de selinux.
+- name: "{{ ansible_distribution }} - Désactivation de selinux."
   selinux:
     state: disabled
 
-- name: ROCKY - Création du repertoire de travail.
+- name: "{{ ansible_distribution }} - Création du repertoire de travail."
   file:
     path: /root/travail
     owner: root
@@ -14,18 +14,16 @@
     mode: 0700
     state: directory
 
-- name: ROCKY - Installation des dépots epel.
+- name: "{{ ansible_distribution }} - Installation des dépots epel."
   dnf:
-    name: "{{ install_depots }}"
+    name: "{{ install_epel }}"
     state: present
     disable_gpg_check: yes
 
-- name: ROCKY - Installation des dépots rpmfusion.
-  dnf:
-    name: "{{ installe_tronc }}"
-    state: latest
+- name: "{{ ansible_distribution }} - Installation des dépots rpmfusion."
+  script: files/rpmfusion.sh
 
-- name: ROCKY - Ajout de paramètres au fichier de configuration de dnf.
+- name: "{{ ansible_distribution }} - Ajout de paramètres au fichier de configuration de dnf."
   ini_file:
     path: /etc/dnf/dnf.conf
     section: main
@@ -55,26 +53,25 @@
     - {option: 'color_update_local', valeur: "dim,green" }
     - {option: 'color_update_remote', valeur: "bold,green" }
 
-#  "(architecture {{ architecture_processeur }})."
-- name: ROCKY - Mise à jour du système.
+- name: "{{ ansible_distribution }} - Mise à jour du système."
   dnf:
     name: "*"
     state: latest
     update_cache: yes
 
-- name: ROCKY - Installation du tronc commun.
+- name: "{{ ansible_distribution }} - Installation du tronc commun."
   dnf:
     name: "{{ installe_tronc }}"
     state: latest
 
-- name: ROCKY - Ajout d'une règle dans le pare-feu pour chrony.
+- name: "{{ ansible_distribution }} - Ajout d'une règle dans le pare-feu pour chrony."
   firewalld:
     port: 123/udp
     permanent: True
     state: enabled
     immediate: yes
 
-- name: ROCKY - Création des répertoires pour les alias.
+- name: "{{ ansible_distribution }} - Création des répertoires pour les alias."
   file:
     path: "{{ item.chemin }}"
     owner: root
@@ -85,7 +82,7 @@
     - {chemin: '/root/.alias', mode: '0644' }
     - {chemin: '/etc/skel/.alias', mode: '0755' }
 
-- name: ROCKY - Copie des divers templates.
+- name: "{{ ansible_distribution }} - Copie des divers templates."
   template:
     src: "templates/{{ item.fichier }}"
     dest: "{{ item.chemin }}"
@@ -98,11 +95,11 @@
     - { fichier: 'alias_utilisateur.j2', chemin: '/etc/skel/.alias/alias.txt', sauve: 'no' }
     - { fichier: 'alias_root.j2', chemin: '/root/.alias/alias.txt', sauve: 'no' }
 
-- name: ROCKY - Configuration de la timezone.
+- name: "{{ ansible_distribution }} - Configuration de la timezone."
   timezone:
     name: Europe/Paris
 
-- name: ROCKY - Ajout d'une référence dans le fichier bashrc utilisateurs.
+- name: "{{ ansible_distribution }} - Ajout d'une référence dans le fichier bashrc utilisateurs."
   lineinfile:
     path: /etc/skel/.bashrc
     line: 'source ~/.alias/alias.txt'
@@ -113,18 +110,18 @@
     state: present
     backup: yes
 
-- name: ROCKY - Mise à jour des packages pip3.
+- name: "{{ ansible_distribution }} - Mise à jour des packages pip3."
   pip:
     executable: pip
     name: "{{ packages_pip }}"
     state: latest
 
-- name: ROCKY - Suppression du répertoire de travail.
+- name: "{{ ansible_distribution }} - Suppression du répertoire de travail."
   file:
     path: /root/travail
     state: absent
 
-- name: ROCKY - Ajout d'une référence dans le fichier bashrc root.
+- name: "{{ ansible_distribution }} - Ajout d'une référence dans le fichier bashrc root."
   lineinfile:
     path: /root/.bashrc
     line: 'source ~/.alias/alias.txt'
@@ -135,10 +132,10 @@
     state: present
     backup: yes
 
-- name: ROCKY - Activation du thème.
+- name: "{{ ansible_distribution }} - Activation du thème."
   script: files/install_plymouth.sh
 
-- name: ROCKY - Redémarrage du serveur.
+- name: "{{ ansible_distribution }} - Redémarrage du serveur."
   reboot:
     msg: "Redémarrage automatique du serveur par ansible."
     connect_timeout: 5
