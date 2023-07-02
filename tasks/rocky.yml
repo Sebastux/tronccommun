@@ -61,7 +61,7 @@
 
 - name: "{{ ansible_distribution }} - Installation du tronc commun."
   dnf:
-    name: "{{ installe_tronc }}"
+    name: "{{ install_tronc }}"
     state: latest
 
 - name: "{{ ansible_distribution }} - Ajout d'une règle dans le pare-feu pour chrony."
@@ -70,6 +70,9 @@
     permanent: True
     state: enabled
     immediate: yes
+  when:
+    - ( ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"] and not ( lookup("env", "container") == "bwrap-osbuild" ) )
+    - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
 
 - name: "{{ ansible_distribution }} - Création des répertoires pour les alias."
   file:
@@ -134,6 +137,9 @@
 
 - name: "{{ ansible_distribution }} - Activation du thème."
   script: files/install_plymouth.sh
+  when:
+    - ( ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"] and not ( lookup("env", "container") == "bwrap-osbuild" ) )
+    - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
 
 - name: "{{ ansible_distribution }} - Redémarrage du serveur."
   reboot:
@@ -143,3 +149,6 @@
     pre_reboot_delay: 0
     post_reboot_delay: 30
     test_command: uptime
+  when:
+    - ( ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"] and not ( lookup("env", "container") == "bwrap-osbuild" ) )
+    - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]

@@ -1,2 +1,6 @@
-# Fichier test
 ---
+- name: Test du tronc commun.
+  hosts: localhost
+  gather_facts: yes
+  roles:
+    - tronccommun
