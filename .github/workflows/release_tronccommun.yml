@@ -1,0 +1,129 @@
+name: "Test d'installation du tronc commun."
+run-name: Installation du tronc commun ansible.
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  test-Fedora:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+    - name: Clonage du dépot.
+      uses: actions/checkout@v3.5.3
+      with:
+          fetch-depth: 0
+
+    - name: Récupération des scripts.
+      shell: bash
+      run: |
+        cp tests/* .
+        chmod 700 *.sh
+
+    - name: Mise à jour du conteneur.
+      shell: bash
+      run: ./update.sh
+
+    - name: Installation des RPM.
+      shell: bash
+      run: ./Install_rpm.sh
+
+    - name: Test du role.
+      shell: bash
+      run: ./test_role.sh
+
+  test-Alma:
+    needs: test-Fedora
+    runs-on: ubuntu-latest
+    container:
+      image: almalinux:latest
+    steps:
+    - name: Clonage du dépot.
+      uses: actions/checkout@v3.5.3
+      with:
+          fetch-depth: 0
+
+    - name: Récupération des scripts.
+      shell: bash
+      run: |
+        cp tests/* .
+        chmod 700 *.sh
+
+    - name: Mise à jour du conteneur.
+      shell: bash
+      run: ./update.sh
+
+    - name: Installation des RPM.
+      shell: bash
+      run: ./Install_rpm.sh
+
+    - name: Test du role.
+      shell: bash
+      run: ./test_role.sh
+
+  test-Rocky:
+    needs: test-Alma
+    runs-on: ubuntu-latest
+    container:
+      image: rockylinux:9.2
+    steps:
+    - name: Clonage du dépot.
+      uses: actions/checkout@v3.5.3
+      with:
+          fetch-depth: 0
+
+    - name: Récupération des scripts.
+      shell: bash
+      run: |
+        cp tests/* .
+        chmod 700 *.sh
+
+    - name: Mise à jour du conteneur.
+      shell: bash
+      run: ./update.sh
+
+    - name: Installation des RPM.
+      shell: bash
+      run: ./Install_rpm.sh
+
+    - name: Test du role.
+      shell: bash
+      run: ./test_role.sh
+
+  create-release:
+    needs: test-Rocky
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clonage du dépot.
+      uses: actions/checkout@v3.5.3
+      with:
+          fetch-depth: 0
+
+    - name: Récupération des scripts.
+      shell: bash
+      run: |
+        cp tests/* .
+        chmod 700 *.sh
+
+    - name: Préparation de la release.
+      shell: bash
+      run: ./create_release.sh
+
+    - name: Création de la release.
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        bodyFile: "body.md"
+        allowUpdates: false
+        artifactErrorsFailBuild: true
+        generateReleaseNotes: false
+        name: "Tronccommun version 1.2.0"
+        owner: ${{ github.actor }}
+        prerelease: false
+        token: "${{ secrets.SEBACTION_TOKEN }}"
+        makeLatest: true
+        tag: "v1.2.0"
+        artifacts: |
+          tronccommun.tar.bz2
+          tronccommun.zip

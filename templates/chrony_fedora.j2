@@ -14,9 +14,13 @@ server 3.europe.pool.ntp.org iburst
 port 123
 
 # Adresse de broadcast et adresse et adresse d'écoute pour les clients
+{% if ansible_default_ipv4.address is defined %}
 broadcast 60 {{ ansible_default_ipv4.address }} 123
 bindcmdaddress {{ ansible_default_ipv4.address }}
-
+{% else %}
+broadcast 60 127.0.0.1 123
+bindcmdaddress 127.0.0.1
+{% endif %}
 
 # Record the rate at which the system clock gains/losses time.
 driftfile /var/lib/chrony/drift

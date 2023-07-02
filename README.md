@@ -33,6 +33,15 @@ Sebastux.
 
 ### **Versions** :
 
+![alt text](https://img.shields.io/badge/version-v1.1.0-brightgreen.svg "Logo Version") (02/07/2023) :
+
+- Création de la CI.
+- Ajout des scripts shell pour la CI.
+- Création de la 1 ère version de la release.
+- Suppression de la prise en charge de centos.
+- Modification du template chrony pour exécution en conteneur.
+- Ajout de condition d'exécution en conteneur sur certain module.
+
 ![alt text](https://img.shields.io/badge/version-v1.1.0-brightgreen.svg "Logo Version") (25/06/2023) :
 
 - Ajout de la prise en charge d'Alma Linux. Le rôle est commun pour Rocky et Alma.

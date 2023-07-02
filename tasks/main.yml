@@ -4,11 +4,6 @@
     file: fedora.yml
   when: ansible_distribution == "Fedora"
 
-- name: Installation d'une machine CentOS.
-  import_tasks:
-    file: centos.yml
-  when: ansible_distribution == "CentOS"
-
 - name: Installation d'une machine Rocky Linux.
   import_tasks:
     file: rocky.yml
