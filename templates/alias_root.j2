@@ -5,8 +5,17 @@ unalias ll 2>/dev/null
 alias ll='ls -lh --color=auto'
 
 # Alias pour les mises à jour
+{% if ansible_distribution == "Rocky" %}
+alias maj='dnf clean all; dnf update *dnf* rpmfusion* -y --enablerepo=epel-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing; dnf -y update'
+alias beta='dnf update --enablerepo=epel-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing'
+{% elif ansible_distribution == "AlmaLinux" %}
+alias maj='dnf clean all; dnf update *dnf* rpmfusion* -y --enablerepo=epel-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing; dnf -y update'
+alias beta='dnf update --enablerepo=epel-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing'
+{% elif ansible_distribution == "Fedora" %}
 alias maj='dnf clean all; dnf update *dnf* rpmfusion* -y --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing; dnf -y update'
 alias beta='dnf update --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing'
+{% endif %}
+
 
 # Ajout du timestamp dans history
 HISTTIMEFORMAT="%d/%m/%y %T "
