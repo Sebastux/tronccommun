@@ -11,7 +11,7 @@
   dnf:
     name: "{{ desinstalle_gui }}"
     state: absent
-  when: xfce_svce.stat.exist is true | bool
+  when: xfce_svce.stat.exists
 
 - name: FEDORA - Désactivation de selinux.
   selinux:
@@ -129,7 +129,7 @@
 
 - name: FEDORA - Installation pour un PC.
   import_tasks: pc.yml
-  when: xfce_svce.stat.exist is true | bool
+  when: xfce_svce.stat.exists
 
 - name: FEDORA - Suppression du répertoire de travail.
   file:
