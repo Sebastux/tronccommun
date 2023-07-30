@@ -33,7 +33,13 @@ Sebastux.
 
 ### **Versions** :
 
-![alt text](https://img.shields.io/badge/version-v1.1.0-brightgreen.svg "Logo Version") (02/07/2023) :
+![alt text](https://img.shields.io/badge/version-v1.3.0-brightgreen.svg "Logo Version") (30/07/2023) :
+- Correction d'une tupo lors du test d'installation du PC.
+- Création d'alias différent en fonction de la distribution. Le choix est fait par Jinja.
+- Mise en forme de boucle.
+- Correction de la version 1.2 dans le README.
+
+![alt text](https://img.shields.io/badge/version-v1.2.0-brightgreen.svg "Logo Version") (02/07/2023) :
 
 - Création de la CI.
 - Ajout des scripts shell pour la CI.
