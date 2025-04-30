@@ -16,8 +16,15 @@ installe_gui: [ 'okular', 'okular-libs', 'gparted', 'lshw-gui', 'gsmartcontrol',
                 'filezilla', 'libfilezilla', 'unetbootin', 'mediawriter', 'p7zip-gui',
                 'smartmontools', 'sssd-client', 'numlockx', 'aria2', 'bpytop', 'btop' ]
 
-desinstalle_gui: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'claws-mail', 'pidgin', 'transmission',
-                  'xfce4-screensaver', 'xscreensaver-base' ]
+desinstalle_gui: [ 'dnfdragora', 'dnfdragora-updater', 'geany', 'geany-libgeany' , 'pidgin', 'transmission', 'xfce4-screensaver',
+                   'claws-mail', 'claws-mail-plugins-pgp', 'claws-mail-plugins-notification', 'claws-mail-plugins-smime',
+                   'claws-mail-plugins-archive', 'claws-mail-plugins-att-remover', 'claws-mail-plugins-attachwarner',
+                   'claws-mail-plugins-fetchinfo', 'claws-mail-plugins-mailmbox', 'claws-mail-plugins-newmail',
+                   'claws-mail-plugins-rssyl', 'claws-mail-plugins-spam-report', 'claws-mail-plugins-tnef',
+                   'claws-mail-plugins-vcalendar' ]
 
 install_depots: [ "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
                   "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm" ]
+
+
+

@@ -2,6 +2,7 @@
 - name: FEDORA - Import des variables de la distribution.
   include_vars: defaults/fedora.yml
 
+
 - name: FEDORA - Test de la présence de service XFCE.
   stat:
     path: /usr/lib/systemd/system/lightdm.service
@@ -10,8 +11,8 @@
 - name: FEDORA - Désinstallation de packages inutiles sur PC.
   dnf:
     name: "{{ desinstalle_gui }}"
-    state: absent
-  when: xfce_svce.stat.exists
+    state: removed
+  when: xfce_svce.stat.exists is true | bool
 
 - name: FEDORA - Désactivation de selinux.
   selinux:
@@ -129,7 +130,7 @@
 
 - name: FEDORA - Installation pour un PC.
   import_tasks: pc.yml
-  when: xfce_svce.stat.exists
+  when: xfce_svce.stat.exists is true | bool
 
 - name: FEDORA - Suppression du répertoire de travail.
   file:
