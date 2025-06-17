@@ -1,14 +1,15 @@
 {{ ansible_managed | comment }}
 
-server 0.fr.pool.ntp.org iburst
-server 1.fr.pool.ntp.org iburst
-server 2.fr.pool.ntp.org iburst
-server 3.fr.pool.ntp.org iburst
-server 0.europe.pool.ntp.org iburst
-server 1.europe.pool.ntp.org iburst
-server 2.europe.pool.ntp.org iburst
-server 3.europe.pool.ntp.org iburst
-
+{% for item in seq -%}
+{{ item }}
+{%- endfor %}
+# Liste des serveurs NTP de synchro
+{% for item in seq -%}
+{{ item }}
+{%- endfor %}
+{%- for serveur in liste_serveur %}
+server {{ serveur }}
+{% endfor %}
 
 # Port d’écoute
 port 123
@@ -47,7 +48,6 @@ rtcsync
 
 # Serve time even if not synchronized to a time source.
 #local stratum 10
-
 
 # Get TAI-UTC offset and leap seconds from the system tz database.
 leapsecmode slew
