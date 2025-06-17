@@ -94,7 +94,7 @@
   loop:
     - {fichier: 'chrony.j2', chemin: '/etc/chrony.conf'}
     - {fichier: 'alias_utilisateur.j2', chemin: '/etc/skel/.alias/alias.txt'}
-    - {fichier: 'alias_root.j2', chemin: '/root/.alias/alias.txt'}
+    - {fichier: 'root_fedora.j2', chemin: '/root/.alias/alias.txt'}
 
 - name: FEDORA - Configuration de la timezone.
   community.general.timezone:
