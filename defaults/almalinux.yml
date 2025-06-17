@@ -1,0 +1,21 @@
+---
+install_epel: ['epel-release']
+
+install_tronc9: ['lshw', 'git-all', 'smartmontools', 'python3-libselinux', 'htop',
+                 'chrony', 'python3-pip', 'p7zip', 'p7zip-doc', 'p7zip-plugins', 'python3-devel',
+                 'parted', 'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules',
+                 'vim-ansible', 'vim-common', 'vim-editorconfig', 'vim-enhanced', 'vim-filesystem', 'vim-minimal',
+                 'plymouth', 'plymouth-core-libs', 'plymouth-graphics-libs', 'plymouth-plugin-fade-throbber',
+                 'plymouth-plugin-label', 'plymouth-plugin-script', 'plymouth-plugin-space-flares', 'plymouth-plugin-two-step',
+                 'plymouth-scripts', 'plymouth-system-theme', 'plymouth-theme-charge', 'plymouth-theme-fade-in',
+                 'plymouth-theme-script', 'plymouth-theme-solar', 'plymouth-theme-spinfinity', 'plymouth-theme-spinner']
+
+install_tronc10: ['lshw', 'git-all', 'smartmontools', 'python3-libselinux', 'htop',
+                 'chrony', 'python3-pip', '7zip-standalone-all', '7zip', 'python3-devel',
+                 'parted', 'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules',
+                 'vim-common', 'vim-data', 'vim-enhanced', 'vim-filesystem', 'vim-powerline',
+                 'plymouth', 'plymouth-core-libs', 'plymouth-graphics-libs', 'plymouth-plugin-fade-throbber',
+                 'plymouth-plugin-label', 'plymouth-plugin-script', 'plymouth-plugin-space-flares',
+                 'plymouth-plugin-two-step', 'plymouth-scripts', 'plymouth-system-theme', 'plymouth-theme-breeze',
+                 'plymouth-theme-fade-in', 'plymouth-theme-hot-dog', 'plymouth-theme-script', 'plymouth-theme-solar',
+                 'plymouth-theme-spinfinity', 'plymouth-theme-spinner']

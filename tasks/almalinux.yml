@@ -1,0 +1,160 @@
+---
+- name: "Almalinux - Import des variables de la distribution."
+  ansible.builtin.include_vars:
+    file: defaults/almalinux.yml
+
+- name: "Almalinux - Désinstallation de packages inutiles."
+  ansible.builtin.dnf:
+    name: "{{ liste_desinstalle }}"
+    state: absent
+
+- name: "Almalinux - Suppression de la règle cockpit dans le pare-feu."
+  ansible.posix.firewalld:
+    service: cockpit
+    state: disabled
+    permanent: true
+    immediate: true
+
+- name: "Almalinux - Installation des dépôts epel."
+  ansible.builtin.dnf:
+    name: "{{ install_epel }}"
+    state: present
+    disable_gpg_check: true
+
+- name: "Almalinux - Désactivation du dépot epel cisco openh264."
+  ansible.builtin.ini_file:
+    path: /etc/yum.repos.d/epel-cisco-openh264.repo
+    section: epel-cisco-openh264
+    option: enabled
+    value: 0
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Almalinux - Ajout de paramètres au fichier de configuration de dnf."
+  ansible.builtin.ini_file:
+    path: /etc/dnf/dnf.conf
+    section: main
+    option: "{{ item.option }}"
+    value: "{{ item.valeur }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - {option: 'clean_requirements_on_remove', valeur: 'True'}
+    - {option: 'fastestmirror', valeur: 'True'}
+    - {option: 'max_parallel_downloads', valeur: '4'}
+    - {option: 'metadata_timer_sync', valeur: '0'}
+    - {option: 'log_compress', valeur: 'True'}
+    - {option: 'deltarpm', valeur: 'True'}
+    - {option: 'color', valeur: 'always'}
+    - {option: 'color_list_installed_older', valeur: 'yellow'}
+    - {option: 'color_list_installed_newer', valeur: "bold,yellow"}
+    - {option: 'color_list_installed_reinstall', valeur: "dim,cyan"}
+    - {option: 'color_list_installed_running_kernel', valeur: "bold,underline"}
+    - {option: 'color_list_installed_extra', valeur: "bold,red"}
+    - {option: 'color_list_available_upgrade', valeur: "bold,blue"}
+    - {option: 'color_list_available_downgrade', valeur: "dim,magenta"}
+    - {option: 'color_list_available_install', valeur: "bold,cyan"}
+    - {option: 'color_list_available_reinstall', valeur: "bold,underline,green"}
+    - {option: 'color_list_available_running_kernel', valeur: "bold,underline"}
+    - {option: 'color_search_match', valeur: "bold,magenta"}
+    - {option: 'color_update_installed', valeur: "bg:red"}
+    - {option: 'color_update_local', valeur: "dim,green"}
+    - {option: 'color_update_remote', valeur: "bold,green"}
+
+# ignore_errors : Utillisation suite à erreur 404
+- name: "Almalinux - Mise à jour du système."
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_cache: true
+  ignore_errors: true
+
+- name: "Almalinux - Installation du tronc commun Alma 9."
+  ansible.builtin.dnf:
+    name: "{{ install_tronc9 }}"
+    state: latest
+  when: ansible_facts['distribution_major_version'] == "9"
+
+- name: "Almalinux - Installation du tronc commun Alma 10."
+  ansible.builtin.dnf:
+    name: "{{ install_tronc10 }}"
+    state: latest
+  when: ansible_facts['distribution_major_version'] == "10"
+
+- name: "Almalinux - Ouverture du port NTP."
+  ansible.posix.firewalld:
+    service: ntp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: "Almalinux - Création des répertoires pour les alias."
+  ansible.builtin.file:
+    path: "{{ item.chemin }}"
+    owner: root
+    group: root
+    mode: "{{ item.mode }}"
+    state: directory
+  loop:
+    - {chemin: '/root/.alias', mode: '0700'}
+    - {chemin: '/etc/skel/.alias', mode: '0755'}
+
+- name: "Almalinux - Copie des divers templates."
+  ansible.builtin.template:
+    src: "templates/{{ item.fichier }}"
+    dest: "{{ item.chemin }}"
+    backup: false
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - {fichier: 'chrony.j2', chemin: '/etc/chrony.conf'}
+    - {fichier: 'alias_utilisateur.j2', chemin: '/etc/skel/.alias/alias.txt'}
+    - {fichier: 'alias_root.j2', chemin: '/root/.alias/alias.txt'}
+
+- name: "Almalinux - Configuration de la timezone."
+  community.general.timezone:
+    name: Europe/Paris
+
+- name: "Almalinux - Ajout d'une référence dans le fichier bashrc utilisateurs."
+  ansible.builtin.lineinfile:
+    path: /etc/skel/.bashrc
+    line: 'source ~/.alias/alias.txt'
+    owner: root
+    group: root
+    mode: '0644'
+    insertafter: EOF
+    state: present
+    backup: true
+
+- name: "Almalinux - Ajout d'une référence dans le fichier bashrc root."
+  ansible.builtin.lineinfile:
+    path: /root/.bashrc
+    line: 'source ~/.alias/alias.txt'
+    owner: root
+    group: root
+    mode: '0644'
+    insertafter: EOF
+    state: present
+    backup: true
+
+- name: "Almalinux - Activation du thème."
+  ansible.builtin.script:
+    cmd: files/install_plymouth.sh
+
+- name: "Almalinux - Démarrage du service chrony."
+  ansible.builtin.systemd_service:
+    name: chronyd
+    state: started
+    enabled: true
+
+- name: "Almalinux - Redémarrage du serveur."
+  ansible.builtin.reboot:
+    msg: "Redémarrage automatique du serveur par ansible."
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
