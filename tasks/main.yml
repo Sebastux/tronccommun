@@ -1,15 +1,10 @@
 ---
 - name: Installation d'une machine fedora.
-  import_tasks:
+  ansible.builtin.import_tasks:
     file: fedora.yml
   when: ansible_distribution == "Fedora"
 
-# - name: Installation d'une machine Rocky Linux.
-#   import_tasks:
-#     file: rocky.yml
-#   when: ansible_distribution == "Rocky"
-#
-# - name: Installation d'une machine Alma Linux.
-#   import_tasks:
-#     file: rocky.yml
-#   when: ansible_distribution == "AlmaLinux"
+- name: Installation d'une machine Almalinux.
+  ansible.builtin.import_tasks:
+    file: almalinux.yml
+  when: ansible_distribution == "AlmaLinux"
