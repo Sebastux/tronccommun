@@ -1,0 +1,32 @@
+{{ ansible_managed | comment }}
+
+# Alias perso
+unalias ll 2>/dev/null
+alias ll='ls -lh --color=auto'
+
+# Colorisation des logs
+lesslog() { ccze -A < $1 | less -R; }
+
+# Création d' un repertoire
+function mkcd() { mkdir "${1}" && cd "${1}"; }
+
+export PATH=$HOME/.local/bin:$HOME/bin:$PATH
+
+# Modification du prompt
+export PS1="[\[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;160m\]\u\[$(tput sgr0)\]@\[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;14m\]\h\[$(tput sgr0)\]] \$? : \[$(tput sgr0)\]"
+
+# Ajout du timestamp dans history
+HISTTIMEFORMAT="%d/%m/%y %T "
+
+# Augmentation de la liste de l'historique des commandes
+export HISTSIZE=2000
+
+# Utilisation de vim par defaut
+if $(which vim > /dev/null 2>&1)
+then
+        alias vi='vim'
+        export EDITOR=$(which vim)
+fi
+
+# fonctions de mise à jour
+source /home/Sebastien/Dépots/Scripts/Bashrc/update.txt
