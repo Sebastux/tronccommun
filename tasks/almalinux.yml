@@ -1,23 +1,37 @@
 ---
-- name: FEDORA - Import des variables de la distribution.
+- name: "Almalinux - Import des variables de la distribution."
   ansible.builtin.include_vars:
-    file: defaults/fedora.yml
+    file: defaults/almalinux.yml
 
-- name: FEDORA - Installation de la librairie libdnf5.
-  ansible.builtin.shell: dnf install -y python3-libdnf5
-  args:
-    executable: /bin/bash
-  register: installation
-  failed_when: installation.rc != 0
-  changed_when: installation.rc == 0
+- name: "Almalinux - Désinstallation de packages inutiles."
+  ansible.builtin.dnf:
+    name: "{{ liste_desinstalle }}"
+    state: absent
 
-- name: FEDORA - Installation des dépots RPM fusion.
-  ansible.builtin.dnf5:
-    name: "{{ install_depots }}"
+- name: "Almalinux - Suppression de la règle cockpit dans le pare-feu."
+  ansible.posix.firewalld:
+    service: cockpit
+    state: disabled
+    permanent: true
+    immediate: true
+
+- name: "Almalinux - Installation des dépôts epel."
+  ansible.builtin.dnf:
+    name: "{{ install_epel }}"
     state: present
     disable_gpg_check: true
 
-- name: FEDORA - Ajout de paramètres au fichier de configuration de dnf.
+- name: "Almalinux - Désactivation du dépot epel cisco openh264."
+  ansible.builtin.ini_file:
+    path: /etc/yum.repos.d/epel-cisco-openh264.repo
+    section: epel-cisco-openh264
+    option: enabled
+    value: 0
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Almalinux - Ajout de paramètres au fichier de configuration de dnf."
   ansible.builtin.ini_file:
     path: /etc/dnf/dnf.conf
     section: main
@@ -49,30 +63,34 @@
     - {option: 'color_update_local', valeur: "dim,green"}
     - {option: 'color_update_remote', valeur: "bold,green"}
 
-- name: FEDORA - Désinstallation de packages inutiles.
-  ansible.builtin.dnf5:
-    name: "{{ liste_desinstalle }}"
-    state: absent
-
-- name: FEDORA - Suppression de la règle cockpit dans le pare-feu.
-  ansible.posix.firewalld:
-    service: cockpit
-    state: disabled
-    permanent: true
-    immediate: true
-
-- name: FEDORA - Mise à jour du système.
-  ansible.builtin.dnf5:
+# ignore_errors : Utillisation suite à erreur 404
+- name: "Almalinux - Mise à jour du système."
+  ansible.builtin.dnf:
     name: "*"
     state: latest
     update_cache: true
+  ignore_errors: true
 
-- name: FEDORA - Installation du tronc commun.
-  ansible.builtin.dnf5:
-    name: "{{ installe_tronc }}"
+- name: "Almalinux - Installation du tronc commun Alma 9."
+  ansible.builtin.dnf:
+    name: "{{ install_tronc9 }}"
     state: latest
+  when: ansible_facts['distribution_major_version'] == "9"
 
-- name: FEDORA - Création des répertoires pour les alias.
+- name: "Almalinux - Installation du tronc commun Alma 10."
+  ansible.builtin.dnf:
+    name: "{{ install_tronc10 }}"
+    state: latest
+  when: ansible_facts['distribution_major_version'] == "10"
+
+- name: "Almalinux - Ouverture du port NTP."
+  ansible.posix.firewalld:
+    service: ntp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: "Almalinux - Création des répertoires pour les alias."
   ansible.builtin.file:
     path: "{{ item.chemin }}"
     owner: root
@@ -80,10 +98,10 @@
     mode: "{{ item.mode }}"
     state: directory
   loop:
-    - {chemin: '/root/.alias', mode: '0644'}
+    - {chemin: '/root/.alias', mode: '0700'}
     - {chemin: '/etc/skel/.alias', mode: '0755'}
 
-- name: FEDORA - Copie des divers templates.
+- name: "Almalinux - Copie des divers templates."
   ansible.builtin.template:
     src: "templates/{{ item.fichier }}"
     dest: "{{ item.chemin }}"
@@ -94,13 +112,13 @@
   loop:
     - {fichier: 'chrony.j2', chemin: '/etc/chrony.conf'}
     - {fichier: 'alias_utilisateur.j2', chemin: '/etc/skel/.alias/alias.txt'}
-    - {fichier: 'root_fedora.j2', chemin: '/root/.alias/alias.txt'}
+    - {fichier: 'alias_root.j2', chemin: '/root/.alias/alias.txt'}
 
-- name: FEDORA - Configuration de la timezone.
+- name: "Almalinux - Configuration de la timezone."
   community.general.timezone:
     name: Europe/Paris
 
-- name: FEDORA - Ajout d'une référence dans le fichier bashrc utilisateurs.
+- name: "Almalinux - Ajout d'une référence dans le fichier bashrc utilisateurs."
   ansible.builtin.lineinfile:
     path: /etc/skel/.bashrc
     line: 'source ~/.alias/alias.txt'
@@ -111,7 +129,7 @@
     state: present
     backup: true
 
-- name: FEDORA - Ajout d'une référence dans le fichier bashrc root.
+- name: "Almalinux - Ajout d'une référence dans le fichier bashrc root."
   ansible.builtin.lineinfile:
     path: /root/.bashrc
     line: 'source ~/.alias/alias.txt'
@@ -122,18 +140,17 @@
     state: present
     backup: true
 
-- name: FEDORA - Activation du thème.
+- name: "Almalinux - Activation du thème."
   ansible.builtin.script:
     cmd: files/install_plymouth.sh
 
-- name: FEDORA - Ouverture du port NTP.
-  ansible.posix.firewalld:
-    service: ntp
-    permanent: true
-    state: enabled
-    immediate: true
+- name: "Almalinux - Démarrage du service chrony."
+  ansible.builtin.systemd_service:
+    name: chronyd
+    state: started
+    enabled: true
 
-- name: FEDORA - Redémarrage du serveur.
+- name: "Almalinux - Redémarrage du serveur."
   ansible.builtin.reboot:
     msg: "Redémarrage automatique du serveur par ansible."
     connect_timeout: 5

@@ -1,23 +1,16 @@
 ---
 # Listes des packages à installer / desinstaller
-installe_tronc: [ 'vim-filesystem', 'vim-minimal', 'vim-common', 'vim-X11', 'vim-commentary', 'vim-enhanced',
-                  'vim-syntastic-sh', 'vim-syntastic-xml', 'vim-syntastic-spec', 'vim-syntastic-xslt',
-                  'vim-syntastic-yaml', 'vim-syntastic-python', 'vim-syntastic-ansible', 'lshw', 'git-all',
-                  'smartmontools', 'python3-dnf-plugin-system-upgrade', 'python3-libselinux', 'htop',
-                  'chrony', 'python3-pip', 'p7zip', 'p7zip-doc', 'p7zip-plugins', 'python3-devel',
-                  'plymouth', 'plymouth-core-libs', 'plymouth-graphics-libs', 'plymouth-kcm',
-                  'plymouth-plugin-fade-throbber', 'plymouth-theme-hot-dog', 'plymouth-plugin-label',
-                  'plymouth-plugin-script', 'plymouth-plugin-space-flares', 'plymouth-plugin-two-step',
-                  'plymouth-scripts', 'plymouth-system-theme', 'plymouth-theme-breeze', 'plymouth-theme-charge',
-                  'plymouth-theme-fade-in', 'plymouth-theme-script', 'plymouth-theme-solar', 'plymouth-theme-spinfinity',
-                  'plymouth-theme-spinner', 'parted', 'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules' ]
+installe_tronc: ['vim-filesystem', 'vim-minimal', 'vim-common', 'vim-X11', 'vim-commentary', 'vim-enhanced',
+                 'vim-syntastic-sh', 'vim-syntastic-xml', 'vim-syntastic-spec', 'vim-syntastic-xslt',
+                 'vim-syntastic-yaml', 'vim-syntastic-python', 'vim-syntastic-ansible', 'lshw', 'git-all',
+                 'smartmontools', 'python3-dnf-plugin-system-upgrade', 'python3-libselinux', 'htop',
+                 'chrony', 'python3-pip', 'p7zip', 'p7zip-doc', 'p7zip-plugins', 'python3-devel',
+                 'plymouth', 'plymouth-core-libs', 'plymouth-graphics-libs', 'plymouth-kcm',
+                 'plymouth-plugin-fade-throbber', 'plymouth-theme-hot-dog', 'plymouth-plugin-label',
+                 'plymouth-plugin-script', 'plymouth-plugin-space-flares', 'plymouth-plugin-two-step',
+                 'plymouth-scripts', 'plymouth-system-theme', 'plymouth-theme-breeze', 'plymouth-theme-charge',
+                 'plymouth-theme-fade-in', 'plymouth-theme-script', 'plymouth-theme-solar', 'plymouth-theme-spinfinity',
+                 'plymouth-theme-spinner', 'parted', 'cmake', 'cmake-data', 'cmake-filesystem', 'extra-cmake-modules']
 
-installe_gui: [ 'okular', 'okular-libs', 'gparted', 'lshw-gui', 'gsmartcontrol',
-                'filezilla', 'libfilezilla', 'unetbootin', 'mediawriter', 'p7zip-gui',
-                'smartmontools', 'sssd-client', 'numlockx', 'aria2', 'bpytop', 'btop' ]
-
-desinstalle_gui: [ 'dnfdragora', 'dnfdragora-updater', 'rhythmbox', 'geany', 'claws-mail', 'pidgin', 'transmission',
-                  'xfce4-screensaver', 'xscreensaver-base' ]
-
-install_depots: [ "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
-                  "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm" ]
+install_depots: ["https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm",
+                 "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"]

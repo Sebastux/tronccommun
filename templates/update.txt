@@ -1,0 +1,25 @@
+{{ ansible_managed | comment }}
+
+{% for item in seq -%}
+{{ item }}
+{%- endfor %}
+function maj()
+{
+  dnf clean all
+  dnf update rpmfusion* -y --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing
+  dnf -y update 
+}
+
+function maj_offline()
+{
+  dnf clean all
+  dnf update rpmfusion* -y --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing
+  dnf upgrade --offline -y
+}
+
+# alias maj='dnf clean all; dnf update rpmfusion* -y --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing; dnf -y update #; flatpak update -y; flatpak uninstall --unused -y; flatpak repair'
+#alias maj_offline='dnf clean all; dnf update rpmfusion* -y --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing; upgrade --offline -y #; flatpak update -y; flatpak uninstall --unused -y; flatpak repair'
+
+alias beta='dnf update --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing'
+alias beta_offline='dnf upgrade --offline --enablerepo=updates-testing --enablerepo=rpmfusion-free-updates-testing --enablerepo=rpmfusion-nonfree-updates-testing'
+alias flatupdate='flatpak update -y; flatpak uninstall --unused -y; flatpak repair'
