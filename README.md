@@ -1,6 +1,6 @@
 # **tronccomun** :
 
-Ce rôle permet d'installer un ensemble de packages pour les PC et serveurs .
+Ce rôle permet d'installer un ensemble de packages pour les PC et serveurs.
 Ce playbook prend en charge les serveurs et les PC Fedora. Un ensemble de tâche commune aux deux sont exécutés, puis les tâches propres au type de
 machine est exécuté si une installation du bureau XFCE est détecté
 
@@ -34,7 +34,7 @@ Sebastux.
 ### **Versions** :
 
 ![alt text](https://img.shields.io/badge/version-v1.3.0-brightgreen.svg "Logo Version") (30/07/2023) :
-- Correction d'une tupo lors du test d'installation du PC.
+- Correction d'une tipo lors du test d'installation du PC.
 - Création d'alias différent en fonction de la distribution. Le choix est fait par Jinja.
 - Mise en forme de boucle.
 - Correction de la version 1.2 dans le README.
