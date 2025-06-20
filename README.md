@@ -29,7 +29,7 @@ Sebastux.
 
 ### **Versions** :
 
-![alt text](https://img.shields.io/badge/version-v1.4.0-brightgreen.svg "Logo Version") (17/26/2025) :
+![alt text](https://img.shields.io/badge/version-v1.4.0-brightgreen.svg "Logo Version") (17/06/2025) :
 - Correction de divers typos.
 - Suppression du code pour Rocky et CentOS.
 - Mise à jour du nom des packages pour FEDORA 42.
